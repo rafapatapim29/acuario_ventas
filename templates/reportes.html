@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Acuario - Reportes Financieros</title>
+    <style>
+        body {
+            background: #f4f7f6;
+            padding: 20px;
+        }
+
+        .card-reporte {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .text-ventas {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .text-gastos {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .text-balance {
+            font-weight: 800;
+            color: #333;
+        }
+
+        .header-section {
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .card-mes {
+            transition: transform 0.2s;
+            border: none;
+            background: #ffffff;
+        }
+
+        .card-mes:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-0">📊 Reportes Financieros</h1>
+                <p class="text-muted">Análisis de utilidad real y flujo de caja</p>
+            </div>
+            <div>
+                <a href="/historial" class="btn btn-primary btn-nav me-2">Ver Historial</a>
+                <a href="/" class="btn btn-outline-secondary btn-nav">Volver al Tablero</a>
+            </div>
+        </div>
+
+        <h3 class="header-section">Resumen por Mes</h3>
+        <div class="row mb-4">
+            {% for m in ventas_mensuales %}
+            <div class="col-md-4 mb-3">
+                <div class="card card-mes p-4 shadow-sm">
+                    <h5 class="text-primary fw-bold">{{ m['mes'] }}</h5>
+                    <div class="d-flex justify-content-between mt-3">
+                        <span>Utilidad Ventas:</span>
+                        <span class="text-success fw-bold">${{ "{:,.2f}".format(m['total_ventas']) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Egresos Totales:</span>
+                        <span class="text-danger fw-bold">-${{ "{:,.2f}".format(m['total_egresos']) }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Ganancia Neta:</span>
+                        <span class="badge bg-dark fs-6">${{ "{:,.2f}".format(m['total_ventas'] - m['total_egresos'])
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">No hay datos mensuales suficientes para mostrar el resumen.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card card-reporte p-4">
+            <h3 class="header-section">Flujo Diario (Últimos 30 días)</h3>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Utilidad Ventas (Bruta)</th>
+                            <th>Gastos y Retiros</th>
+                            <th>Balance Neto del Día</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in ventas_diarias %}
+                        <tr>
+                            <td><strong>{{ d['dia'] }}</strong></td>
+                            <td class="text-ventas">${{ "{:,.2f}".format(d['total_ventas']) }}</td>
+                            <td class="text-gastos">-${{ "{:,.2f}".format(d['total_egresos']) }}</td>
+                            <td
+                                class="text-balance {{ 'text-success' if (d['total_ventas'] - d['total_egresos']) >= 0 else 'text-danger' }}">
+                                ${{ "{:,.2f}".format(d['total_ventas'] - d['total_egresos']) }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No hay movimientos registrados en este
+                                periodo.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
