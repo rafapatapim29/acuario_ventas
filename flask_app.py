@@ -6,11 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Configuración de rutas
-if os.path.exists('/home/rafahost/'):
-    BASE_DIR = '/home/rafahost/acuario_ventas'
-else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATABASE = os.path.join(BASE_DIR, 'negocio_v2.db')
 
